@@ -54,6 +54,9 @@ function helpers(page, shotPath) {
 
 async function newPage(browser, state) {
   const ctx = await browser.newContext({ viewport: VIEW, deviceScaleFactor: DSF, locale: app.locale || 'en-GB', timezoneId: 'Europe/London', serviceWorkers: 'block', hasTouch: false });
+  // Optional: start the app's clock at a set date and time (it then runs normally), for apps whose
+  // screens depend on the date. Apps without a "clock" setting use the real date.
+  if (app.clock) await ctx.clock.install({ time: new Date(app.clock) });
   await ctx.addInitScript(([key, s]) => {
     if (!sessionStorage.getItem('__seeded')) { localStorage.setItem(key, s); sessionStorage.setItem('__seeded', '1'); }
   }, [app.storageKey, JSON.stringify(state)]);

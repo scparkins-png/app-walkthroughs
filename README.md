@@ -10,6 +10,7 @@ naming its repo. The tool downloads the latest copy of that repo before recordin
 |---|---|---|
 | SmartDrinkTracker | `apps/smartdrinktracker` | scparkins-png/smart-drinks-tracker |
 | Emergency Home Pack | `apps/emergencyhomepack` | scparkins-png/emrgency-home-pack |
+| Do 30 Day Challenge | `apps/do30daychallenge` | scparkins-png/30-day-challenge |
 
 ## What it makes
 
@@ -59,6 +60,10 @@ add a `tts` spelling for the voice only (for example "Smart Drink Tracker").
 For another app, copy `apps/smartdrinktracker` to a new folder, then change `app.js` (starting
 with `repo`) and `demo-data.js` to suit that app, and add it to the table above. To record a
 local copy of an app instead of its repo, set `APP_CODE` to its folder.
+
+If an app's screens depend on the date, add `clock` to its `app.js` (for example
+`clock: '2026-11-19T09:30:00Z'`). The recording then starts at that date and time and runs normally from
+there, so the demo data can use fixed dates. Apps without `clock` use the real date.
 
 British voices available: `bf_emma`, `bf_isabella`, `bf_alice`, `bf_lily`, `bm_george`,
 `bm_lewis`, `bm_daniel`, `bm_fable`.
