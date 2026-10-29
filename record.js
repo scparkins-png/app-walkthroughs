@@ -53,7 +53,7 @@ function helpers(page, shotPath) {
 }
 
 async function newPage(browser, state) {
-  const ctx = await browser.newContext({ viewport: VIEW, deviceScaleFactor: DSF, serviceWorkers: 'block', hasTouch: false });
+  const ctx = await browser.newContext({ viewport: VIEW, deviceScaleFactor: DSF, locale: app.locale || 'en-GB', timezoneId: 'Europe/London', serviceWorkers: 'block', hasTouch: false });
   await ctx.addInitScript(([key, s]) => {
     if (!sessionStorage.getItem('__seeded')) { localStorage.setItem(key, s); sessionStorage.setItem('__seeded', '1'); }
   }, [app.storageKey, JSON.stringify(state)]);
@@ -109,7 +109,8 @@ async function recordScene(page, scene, dir, shotPath) {
 }
 
 (async () => {
-  const browser = await chromium.launch();
+  // UK English throughout, so date fields show day/month/year (the browser's own language comes from LANG).
+  const browser = await chromium.launch({ args: ['--lang=en-GB'], env: { ...process.env, LANG: 'en_GB.UTF-8', LANGUAGE: 'en_GB' } });
   const timings = {};
   fs.mkdirSync(path.join(work, 'shots'), { recursive: true });
   let page = null, pageState = null;

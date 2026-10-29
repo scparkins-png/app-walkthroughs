@@ -9,6 +9,7 @@ naming its repo. The tool downloads the latest copy of that repo before recordin
 | App | Settings | Code |
 |---|---|---|
 | SmartDrinkTracker | `apps/smartdrinktracker` | scparkins-png/smart-drinks-tracker |
+| Emergency Home Pack | `apps/emergencyhomepack` | scparkins-png/emrgency-home-pack |
 
 ## What it makes
 
