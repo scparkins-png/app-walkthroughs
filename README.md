@@ -12,6 +12,7 @@ naming its repo. The tool downloads the latest copy of that repo before recordin
 | Emergency Home Pack | `apps/emergencyhomepack` | scparkins-png/emrgency-home-pack |
 | Do 30 Day Challenge | `apps/do30daychallenge` | scparkins-png/30-day-challenge |
 | Speak Receipts | `apps/speakreceipts` | scparkins-png/speak-expenses |
+| Pocket Karate | `apps/pocketkarate` | scparkins-png/pocket-karate |
 
 ## What it makes
 
@@ -65,6 +66,9 @@ local copy of an app instead of its repo, set `APP_CODE` to its folder.
 If an app's screens depend on the date, add `clock` to its `app.js` (for example
 `clock: '2026-11-19T09:30:00Z'`). The recording then starts at that date and time and runs normally from
 there, so the demo data can use fixed dates. Apps without `clock` use the real date.
+
+If an app can't be opened as a plain file (for example it uses `<base href="/">`), add `serve` to its
+`app.js`, set to the app's web folder. The recording then opens it from a small local web server.
 
 British voices available: `bf_emma`, `bf_isabella`, `bf_alice`, `bf_lily`, `bm_george`,
 `bm_lewis`, `bm_daniel`, `bm_fable`.
