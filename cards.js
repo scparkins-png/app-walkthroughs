@@ -76,7 +76,7 @@ function outroCard(W, H, tall) {
     <div class="brand" style="justify-content:center"><img src="${icon}" width="${110 * k}" height="${110 * k}"><div class="name" style="font-size:${(tall ? 64 : 72)}px">${app.nameHtml}</div></div>
     <div class="url" style="font-size:${(tall ? 72 : 88)}px;margin-top:${50 * k}px;letter-spacing:-.01em">${esc(app.url)}</div>
     <div style="display:flex;gap:18px;margin-top:${46 * k}px;flex-wrap:wrap;justify-content:center">${chips}</div>
-    <div style="font-size:${32 * k}px;margin-top:${60 * k}px;font-weight:600">☕ ${esc(o.support)}</div>
+    <div style="font-size:${32 * k}px;margin-top:${60 * k}px;font-weight:600">${o.supportIcon || '☕'} ${esc(o.support)}</div>
     <div class="tag" style="font-size:${28 * k}px;margin-top:22px">${esc(o.credit)}</div></div>`);
 }
 const mask = g => `<!doctype html><html><body style="margin:0;background:#000;width:${g.phoneW}px;height:${g.phoneH}px">

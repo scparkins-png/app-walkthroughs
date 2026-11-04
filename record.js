@@ -47,6 +47,8 @@ function helpers(page, shotPath) {
     },
     tap: sel => h.tapEl(page.locator(sel).first()),
     tapNth: (sel, n) => h.tapEl(page.locator(sel).nth(n)),
+    // Open another page of a site (site/serve apps): h.go('badges')
+    async go(p) { await page.goto((server ? server.url : '') + p.replace(/^\//, '')); await page.waitForTimeout(500); await page.addStyleTag({ content: TAP_CSS }); },
     async tab(name) { await h.tap(`nav [data-tab="${name}"], [data-act="tab"][data-tab="${name}"]`); await page.waitForTimeout(350); }
   };
   return h;
@@ -54,7 +56,25 @@ function helpers(page, shotPath) {
 
 // Optional: apps that must be opened from a web address rather than as a file (for example ones using
 // <base href="/">) set "serve" in app.js to their web root. A small local web server is started for them.
-let server = null;
+let server = null, siteProc = null;
+
+// Optional: sites with their own server (for example a club run by a Cloudflare Worker) set "site" in app.js:
+//   site: { setup: async () => {}, command: 'npx wrangler dev ...', cwd: '...', url: 'http://127.0.0.1:8799/', ready: 'api/health' }
+// setup() runs first (e.g. to load demo data), then the command is started and the tool waits until url+ready answers.
+async function startSite(site) {
+  if (site.setup) await site.setup();
+  const { spawn } = require('child_process');
+  siteProc = spawn(site.command, { cwd: site.cwd, shell: true, detached: true, stdio: ['ignore', 'pipe', 'pipe'] });
+  let log = ''; siteProc.stdout.on('data', d => { log += d; }); siteProc.stderr.on('data', d => { log += d; });
+  for (let i = 0; i < 120; i++) {
+    try { const r = await fetch(site.url + (site.ready || '')); if (r.ok) break; } catch (e) {}
+    if (i === 119) { console.error(log.slice(-2000)); throw new Error('Site did not start: ' + site.url); }
+    await new Promise(ok => setTimeout(ok, 1000));
+  }
+  if (site.afterStart) await site.afterStart(site.url);
+  return { url: site.url, srv: { close() { try { process.kill(-siteProc.pid); } catch (e) {} } } };
+}
+
 function startServer(root) {
   const http = require('http');
   const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json',
@@ -77,15 +97,17 @@ async function newPage(browser, state) {
   // Optional: start the app's clock at a set date and time (it then runs normally), for apps whose
   // screens depend on the date. Apps without a "clock" setting use the real date.
   if (app.clock) await ctx.clock.install({ time: new Date(app.clock) });
-  await ctx.addInitScript(([key, s]) => {
+  if (app.storageKey) await ctx.addInitScript(([key, s]) => {
     if (!sessionStorage.getItem('__seeded')) { localStorage.setItem(key, s); sessionStorage.setItem('__seeded', '1'); }
   }, [app.storageKey, JSON.stringify(state)]);
+  // Optional per-app tweak run in every page, e.g. a "Demo data" banner for sites that don't draw their own.
+  if (app.initScript) await ctx.addInitScript(app.initScript);
   const page = await ctx.newPage();
   page.on('pageerror', e => console.log('  page error:', e.message));
   await page.goto(server ? server.url + (app.start || '') : 'file://' + app.appFile);
   await page.waitForTimeout(700);
   // Reload once so any milestones the demo history has earned are recorded quietly, not shown as pop-ups.
-  await page.reload(); await page.waitForTimeout(700);
+  if (app.storageKey) { await page.reload(); await page.waitForTimeout(700); }
   await page.addStyleTag({ content: TAP_CSS });
   return page;
 }
@@ -135,7 +157,8 @@ async function recordScene(page, scene, dir, shotPath) {
   // UK English throughout, so date fields show day/month/year (the browser's own language comes from LANG).
   const browser = await chromium.launch({ args: ['--lang=en-GB'], env: { ...process.env, LANG: 'en_GB.UTF-8', LANGUAGE: 'en_GB' } });
   const timings = {};
-  if (app.serve) server = await startServer(path.resolve(app.serve));
+  if (app.site) server = await startSite(app.site);
+  else if (app.serve) server = await startServer(path.resolve(app.serve));
   fs.mkdirSync(path.join(work, 'shots'), { recursive: true });
   let page = null, pageState = null;
   for (const scene of app.scenes) {
@@ -143,7 +166,7 @@ async function recordScene(page, scene, dir, shotPath) {
     const want = scene.state || 'demo';
     if (want !== pageState) {
       if (page) await page.context().close();
-      page = await newPage(browser, app.demo(want === 'fresh' ? { welcomed: false, empty: true } : {}));
+      page = await newPage(browser, app.demo ? app.demo(want === 'fresh' ? { welcomed: false, empty: true } : {}) : {});
       pageState = want === 'fresh' ? 'fresh-used' : want;   // a fresh page is used once, then demo data loads
     }
     process.stdout.write(`recording ${scene.id}... `);
@@ -155,4 +178,4 @@ async function recordScene(page, scene, dir, shotPath) {
   fs.writeFileSync(path.join(work, 'timings.json'), JSON.stringify(timings, null, 1));
   await browser.close();
   if (server) server.srv.close();
-})().catch(e => { console.error(e); process.exit(1); });
+})().catch(e => { console.error(e); if (server) server.srv.close(); process.exit(1); });

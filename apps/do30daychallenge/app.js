@@ -24,7 +24,8 @@ module.exports = {
   colours: { brand: '#0f766e', brandDark: '#0b2f2c', mint: '#e3f3f1', sky: '#eaf4fb', accent: '#14b8a6' },
   outro: {
     points: ['Free', 'Private, no login', 'Works offline'],
-    support: 'Buy me a tea or coffee · buymeacoffee.com/stuartparkins',
+    supportIcon: '💚',
+    support: 'Support the club · club.do30daychallenge.com/support',
     credit: 'Created by Stuart Parkins · © 2026'
   },
   voice: { name: 'bf_emma', speed: 1.0 },
@@ -122,7 +123,7 @@ module.exports = {
       } },
 
     { id: 'outro', card: 'outro', title: 'Free at do30daychallenge.com',
-      say: 'Do 30 Day Challenge is free at do30daychallenge.com. If it helps you, a tea or coffee is always appreciated.',
-      tts: 'Do Thirty Day Challenge is free at do thirty day challenge dot com. If it helps you, a tea or coffee is always appreciated.' }
+      say: 'Do 30 Day Challenge is free at do30daychallenge.com. If it helps you, join the Challenge Club, and support the club if you can.',
+      tts: 'Do Thirty Day Challenge is free at do thirty day challenge dot com. If it helps you, join the Challenge Club, and support the club if you can.' }
   ]
 };
