@@ -1,4 +1,4 @@
-// © 2026 Stuart Parkins. Walkthrough configuration for the Challenge Club (club.do30daychallenge.com).
+// © 2026 Stuart Parkins. Walkthrough configuration for the Do 30 Day Challenge Club (club.do30daychallenge.com).
 // Scene fields are described in apps/smartdrinktracker/app.js.
 //
 // The club is a Cloudflare Worker with a database, so it can't be opened as a plain file. "site" starts a
@@ -12,15 +12,15 @@ const PORT = 8799;
 const run = (cmd) => execSync(cmd, { cwd: CODE, stdio: 'pipe', env: { ...process.env, CI: '1' } });
 
 module.exports = {
-  name: 'Challenge Club',
-  nameHtml: 'Challenge <span class="accent">Club</span>',
+  name: 'Do 30 Day Challenge Club',
+  nameHtml: 'Do<span class="accent">30</span>DayChallenge Club',
   tagline: 'Feel better, move more, together',
   url: 'club.do30daychallenge.com',
   repo: 'scparkins-png/app-clubs',
   icon: path.join(__dirname, 'icon-512.png'),
   colours: { brand: '#0f766e', brandDark: '#0b2f2c', mint: '#e3f3f1', sky: '#eaf4fb', accent: '#14b8a6' },
   outro: {
-    points: ['Free, no sign-up', 'Encouragement, never rankings', 'Nicknames only'],
+    points: ['Free', 'No accounts', 'No tracking'],
     supportIcon: '💚',
     support: 'Support the club · club.do30daychallenge.com/support',
     credit: 'Created by Stuart Parkins · © 2026'
@@ -57,8 +57,8 @@ module.exports = {
 
   scenes: [
     { id: 'intro', card: 'intro', title: 'Welcome',
-      say: 'Meet the Challenge Club. A free club for everyone doing the 30 Day Challenge, here to help you feel better and move more.',
-      tts: 'Meet the Challenge Club. A free club for everyone doing the thirty day challenge, here to help you feel better and move more.' },
+      say: 'Meet the Do 30 Day Challenge Club. A free club to help you feel better and move more. No accounts, no tracking.',
+      tts: 'Meet the Do Thirty Day Challenge Club. A free club to help you feel better and move more. No accounts, no tracking.' },
 
     { id: 'week', title: 'This week’s starters', label: 'Starters',
       say: 'Every Friday the club welcomes everyone who has started this month’s challenge, on their own or as a team.',
@@ -107,7 +107,7 @@ module.exports = {
       } },
 
     { id: 'outro', card: 'outro', title: 'Join at club.do30daychallenge.com',
-      say: 'The Challenge Club is free at club.do30daychallenge.com. Start your challenge, share it, and we’ll cheer you on.',
-      tts: 'The Challenge Club is free at club dot do thirty day challenge dot com. Start your challenge, share it, and we will cheer you on.' }
+      say: 'The Do 30 Day Challenge Club is free at club.do30daychallenge.com. Start your challenge, share it, and we’ll cheer you on.',
+      tts: 'The Do Thirty Day Challenge Club is free at club dot do thirty day challenge dot com. Start your challenge, share it, and we will cheer you on.' }
   ]
 };

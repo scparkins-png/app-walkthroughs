@@ -123,7 +123,7 @@ module.exports = {
       } },
 
     { id: 'outro', card: 'outro', title: 'Free at do30daychallenge.com',
-      say: 'Do 30 Day Challenge is free at do30daychallenge.com. If it helps you, join the Challenge Club, and support the club if you can.',
-      tts: 'Do Thirty Day Challenge is free at do thirty day challenge dot com. If it helps you, join the Challenge Club, and support the club if you can.' }
+      say: 'Do 30 Day Challenge is free at do30daychallenge.com. If it helps you, join the Do 30 Day Challenge Club, and support the club if you can.',
+      tts: 'Do Thirty Day Challenge is free at do thirty day challenge dot com. If it helps you, join the Do Thirty Day Challenge Club, and support the club if you can.' }
   ]
 };
