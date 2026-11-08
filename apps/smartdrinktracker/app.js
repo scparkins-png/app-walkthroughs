@@ -27,7 +27,8 @@ module.exports = {
   colours: { brand: '#1e8a6e', brandDark: '#123029', mint: '#e2f5ed', sky: '#eaf4fb', accent: '#2a9d7a' },
   outro: {
     points: ['Free', 'Private, no login', 'Works offline'],
-    support: 'Buy me a tea or coffee · buymeacoffee.com/stuartparkins',
+    supportIcon: '💚',
+    support: 'Support the app · smartdrinktracker.org/support',
     credit: 'Created by Stuart Parkins · © 2026'
   },
   voice: { name: 'bf_emma', speed: 1.0 },
@@ -106,7 +107,7 @@ module.exports = {
       } },
 
     { id: 'outro', card: 'outro', title: 'Free at smartdrinktracker.org',
-      say: 'SmartDrinkTracker is free at smartdrinktracker.org. If it helps you, a tea or coffee is always appreciated.',
-      tts: 'Smart Drink Tracker is free at smart drink tracker dot org. If it helps you, a tea or coffee is always appreciated.' }
+      say: 'SmartDrinkTracker is free at smartdrinktracker.org. If it helps you, share it with a friend, and support the app if you can.',
+      tts: 'Smart Drink Tracker is free at smart drink tracker dot org. If it helps you, share it with a friend, and support the app if you can.' }
   ]
 };
