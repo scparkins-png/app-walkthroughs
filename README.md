@@ -13,6 +13,7 @@ naming its repo. The tool downloads the latest copy of that repo before recordin
 | Do 30 Day Challenge | `apps/do30daychallenge` | scparkins-png/30-day-challenge |
 | Speak Receipts | `apps/speakreceipts` | scparkins-png/speak-expenses |
 | Pocket Karate | `apps/pocketkarate` | scparkins-png/pocket-karate |
+| Pocket Karate Club | `apps/pocketkarateclub` | scparkins-png/app-clubs |
 | Do 30 Day Challenge Club (club.do30daychallenge.com) | `apps/challengeclub` | scparkins-png/app-clubs |
 
 ## What it makes
