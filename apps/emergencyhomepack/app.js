@@ -1,5 +1,6 @@
 // © 2026 Stuart Parkins. Walkthrough configuration for Emergency Home Pack.
 // Copied from apps/smartdrinktracker; see that file and the README for what each scene field means.
+// Updated 8 Nov 2026: outro points to the app's own Support the app page (app v1.3).
 const path = require('path');
 const CODE = process.env.APP_CODE || path.join(__dirname, '..', '..', 'apps-code', 'emrgency-home-pack');
 
@@ -18,7 +19,8 @@ module.exports = {
   colours: { brand: '#d9480f', brandDark: '#1d2430', mint: '#fde8dc', sky: '#f3f2ee', accent: '#d9480f' },
   outro: {
     points: ['Free', 'Private, no login', 'Works offline'],
-    support: 'Buy me a tea or coffee · buymeacoffee.com/stuartparkins',
+    supportIcon: '💚',
+    support: 'Support the app · emergencyhomepack.com/support',
     credit: 'Created by Stuart Parkins · © 2026'
   },
   voice: { name: 'bf_emma', speed: 1.0 },
@@ -106,7 +108,7 @@ module.exports = {
       } },
 
     { id: 'outro', card: 'outro', title: 'Free at emergencyhomepack.com',
-      say: 'Emergency Home Pack is free at emergencyhomepack.com. If it helps you, a tea or coffee is always appreciated.',
-      tts: 'Emergency Home Pack is free at emergency home pack dot com. If it helps you, a tea or coffee is always appreciated.' }
+      say: 'Emergency Home Pack is free at emergencyhomepack.com. If it helps you, share it with a friend, and support the app if you can.',
+      tts: 'Emergency Home Pack is free at emergency home pack dot com. If it helps you, share it with a friend, and support the app if you can.' }
   ]
 };
