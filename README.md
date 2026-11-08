@@ -10,6 +10,7 @@ naming its repo. The tool downloads the latest copy of that repo before recordin
 |---|---|---|
 | SmartDrinkTracker | `apps/smartdrinktracker` | scparkins-png/smart-drinks-tracker |
 | Emergency Home Pack | `apps/emergencyhomepack` | scparkins-png/emrgency-home-pack |
+| Important Home List | `apps/importanthomelist` | scparkins-png/important-home-list |
 | Do 30 Day Challenge | `apps/do30daychallenge` | scparkins-png/30-day-challenge |
 | Speak Receipts | `apps/speakreceipts` | scparkins-png/speak-expenses |
 | Pocket Karate | `apps/pocketkarate` | scparkins-png/pocket-karate |
