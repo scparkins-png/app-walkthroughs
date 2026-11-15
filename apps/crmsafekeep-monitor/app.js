@@ -5,10 +5,10 @@ const settings = require('../crmsafekeep-shared/common.js');
 
 module.exports = settings('monitor', 8811, {
   name: 'CRM SafeKeep Monitor',
-  nameHtml: 'CRM <span class="accent">SafeKeep</span>',
-  tagline: 'Know your Zoho CRM is safe and backed up. Free.',
+  nameHtml: 'CRM SafeKeep <span class="accent">Monitor</span>',
+  tagline: 'Free. Know your Zoho CRM is safe and backed up.',
   outro: {
-    points: ['Free', 'Read-only', 'Zoho CRM today, more systems soon'],
+    points: ['Monitor is free', 'Read-only', 'Zoho CRM today, more systems soon'],
     supportIcon: '✉️',
     support: 'Questions? support@crmsafekeep.com',
     credit: 'Created by Stuart Parkins · © 2026'
@@ -16,7 +16,7 @@ module.exports = settings('monitor', 8811, {
 
   scenes: [
     { id: 'intro', card: 'intro', title: 'Welcome',
-      say: "Is your Zoho CRM safe? Most businesses don't actually know." },
+      say: "Is your Zoho CRM safe? Most businesses don't actually know. CRM SafeKeep Monitor is a free way to find out." },
 
     { id: 'backups', card: 'text', title: 'Backups', kicker: 'The problem',
       heading: 'Zoho makes backups. Who keeps them?',
@@ -28,8 +28,8 @@ module.exports = settings('monitor', 8811, {
       lines: ['Workflows get switched off', 'Fields get removed', 'Records go missing'],
       say: "And CRMs change over time. Workflows get switched off, fields get removed, records go missing. If nobody is checking, how would you know?" },
 
-    { id: 'start', title: 'CRM SafeKeep checks for you', label: 'It checks for you',
-      say: 'CRM SafeKeep checks for you. It works with Zoho CRM today, with more systems on the way.',
+    { id: 'start', title: 'Monitor checks for you, free', label: 'Free checks',
+      say: "Monitor checks for you, and it's free. It works with Zoho CRM today, with more systems on the way.",
       run: async (p, h) => {
         await h.go('start'); await h.wait(1600); await h.snap();
         await h.scrollBy(380); await h.wait(1400); await h.scrollTop();
@@ -83,7 +83,7 @@ module.exports = settings('monitor', 8811, {
       lines: ['Some screens may look a little different'],
       say: 'CRM SafeKeep is improving all the time, so some screens may look a little different.' },
 
-    { id: 'outro', card: 'outro', title: 'Free at crmsafekeep.com',
-      say: 'Free at crmsafekeep.com. Created by Stuart Parkins.' }
+    { id: 'outro', card: 'outro', title: 'Monitor is free at crmsafekeep.com',
+      say: 'CRM SafeKeep Monitor is free at crmsafekeep.com. Created by Stuart Parkins.' }
   ]
 });
