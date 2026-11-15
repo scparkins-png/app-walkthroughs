@@ -79,6 +79,17 @@ function outroCard(W, H, tall) {
     <div style="font-size:${32 * k}px;margin-top:${60 * k}px;font-weight:600">${o.supportIcon || '☕'} ${esc(o.support)}</div>
     <div class="tag" style="font-size:${28 * k}px;margin-top:22px">${esc(o.credit)}</div></div>`);
 }
+// A text card between scenes (card: 'text'), e.g. setting out the problem before the app answers it.
+// Scene fields: heading, lines (short points), optional kicker (small line above the heading).
+function textCard(s, W, H, tall) {
+  const k = tall ? 1.1 : 1;
+  const lines = (s.lines || []).map(l => `<li style="margin-top:${22 * k}px">${esc(l)}</li>`).join('');
+  return base(W, H, `<div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 ${tall ? 90 : 220}px">
+    <div class="brand"><img src="${icon}" width="${72 * k}" height="${72 * k}"><div class="name" style="font-size:${38 * k}px">${app.nameHtml}</div></div>
+    ${s.kicker ? `<div style="font-size:${30 * k}px;font-weight:700;color:${C.brand};letter-spacing:.08em;text-transform:uppercase;margin-top:${70 * k}px">${esc(s.kicker)}</div>` : ''}
+    <div class="name" style="font-size:${(tall ? 84 : 92)}px;line-height:1.08;margin-top:${(s.kicker ? 20 : 70) * k}px;max-width:${tall ? 900 : 1400}px">${esc(s.heading)}</div>
+    <ul style="list-style:none;font-size:${44 * k}px;font-weight:600;color:#3d5e56;margin-top:${26 * k}px;line-height:1.25">${lines}</ul></div>`);
+}
 const mask = g => `<!doctype html><html><body style="margin:0;background:#000;width:${g.phoneW}px;height:${g.phoneH}px">
   <div style="width:${g.phoneW}px;height:${g.phoneH}px;border-radius:${g.radius}px;background:#fff"></div></body></html>`;
 
@@ -94,6 +105,10 @@ const mask = g => `<!doctype html><html><body style="margin:0;background:#000;wi
   for (const [i, s] of rec.entries()) {
     await shot(sceneWide(s, i + 1, rec.length), 1920, 1080, `bg-wide-${s.id}.png`);
     await shot(sceneTall(s), 1080, 1920, `bg-tall-${s.id}.png`);
+  }
+  for (const s of app.scenes.filter(s => s.card === 'text')) {
+    await shot(textCard(s, 1920, 1080, false), 1920, 1080, `text-${s.id}-wide.png`);
+    await shot(textCard(s, 1080, 1920, true), 1080, 1920, `text-${s.id}-tall.png`);
   }
   await shot(introCard(1920, 1080, false), 1920, 1080, 'intro-wide.png');
   await shot(introCard(1080, 1920, true), 1080, 1920, 'intro-tall.png');

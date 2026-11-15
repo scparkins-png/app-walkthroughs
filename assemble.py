@@ -8,7 +8,7 @@ import json, os, re, subprocess, sys
 app_dir, work, out_dir = (os.path.abspath(a) for a in sys.argv[1:4])
 os.makedirs(out_dir, exist_ok=True)
 app = json.loads(subprocess.check_output(['node', '-e',
-    "const a=require(process.argv[1]);console.log(JSON.stringify({name:a.name,scenes:a.scenes.map(s=>({id:s.id,say:s.say,card:s.card||null}))}))",
+    "const a=require(process.argv[1]);console.log(JSON.stringify({name:a.name,scenes:a.scenes.map(s=>({id:s.id,say:s.say,card:s.card||null,short:s.short!==false}))}))",
     os.path.join(app_dir, 'app.js')]))
 timings = json.load(open(os.path.join(work, 'timings.json')))
 voice = json.load(open(os.path.join(work, 'voice', 'durations.json')))
@@ -31,8 +31,8 @@ def segment(scene, fmt):
     out = os.path.join(segs, f'{fmt}-{sid}.mp4')
     audio = f'[a0]adelay={int(lead*1000)}|{int(lead*1000)},apad,atrim=0:{dur:.3f}[a]'
     if scene['card']:
-        png = os.path.join(cards, f"{scene['card']}-{fmt}.png")
-        fade = f"fade=t=in:st=0:d=0.35" if scene['card'] == 'intro' else f"fade=t=out:st={dur-0.5:.3f}:d=0.5"
+        png = os.path.join(cards, f"text-{sid}-{fmt}.png" if scene['card'] == 'text' else f"{scene['card']}-{fmt}.png")
+        fade = (f"fade=t=in:st=0:d=0.35" if scene['card'] in ('intro', 'text') else f"fade=t=out:st={dur-0.5:.3f}:d=0.5")
         run(['ffmpeg', '-y', '-loop', '1', '-framerate', str(FPS), '-i', png, '-i', wav,
              '-filter_complex', f'[0]format=yuv420p,{fade}[v];[1]aformat=channel_layouts=stereo,volume=4dB[a0];{audio}',
              '-map', '[v]', '-map', '[a]', '-t', f'{dur:.3f}', *ENC, out])
@@ -96,6 +96,7 @@ def captions():
 for fmt, name in (('wide', f'{slug}-walkthrough-16x9.mp4'), ('tall', f'{slug}-short-9x16.mp4')):
     files = []
     for s in app['scenes']:
+        if fmt == 'tall' and not s['short']: continue   # scenes marked short: false stay out of the Short
         print(f'{fmt:<5} {s["id"]}'); files.append(segment(s, fmt))
     join(files, os.path.join(out_dir, name))
 captions()

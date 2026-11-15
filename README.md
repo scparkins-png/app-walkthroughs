@@ -16,6 +16,8 @@ naming its repo. The tool downloads the latest copy of that repo before recordin
 | Pocket Karate | `apps/pocketkarate` | scparkins-png/pocket-karate |
 | Pocket Karate Club | `apps/pocketkarateclub` | scparkins-png/app-clubs |
 | Do 30 Day Challenge Club (club.do30daychallenge.com) | `apps/challengeclub` | scparkins-png/app-clubs |
+| CRM SafeKeep, Monitor plan | `apps/crmsafekeep-monitor` | scparkins-png/crm-safekeep (private) |
+| CRM SafeKeep, Protect plan | `apps/crmsafekeep-protect` | scparkins-png/crm-safekeep (private) |
 
 ## What it makes
 
@@ -74,6 +76,14 @@ If something needs its own server (for example a club, which is a Cloudflare Wor
 to its `app.js`: a `setup` step, the `command` that starts it, its `url` and a `ready` path to wait for, and an
 `afterStart` step. The Challenge Club uses this to run a local copy with a fresh database of made-up members
 (`apps/challengeclub/demo-data.js`), so the live club is never touched. Scenes can open other pages with `h.go('badges')`.
+
+A scene can be a text card instead of a recording, for example to set out the problem before the app answers it:
+`card: 'text'` with a `heading`, a few short `lines` and an optional `kicker` (a small line above the heading).
+Add `short: false` to any scene to leave it out of the Short.
+
+CRM SafeKeep's two walkthroughs share `apps/crmsafekeep-shared`: `demo-server.mjs` runs the real app code in Node with a
+fresh in-memory database, a pretend Zoho and eight weeks of made-up history for an invented business, so the live app,
+Zoho and real clients are never touched. Its repo is private, so `run.sh` needs GitHub access to download it (or set `APP_CODE`).
 
 If an app can't be opened as a plain file (for example it uses `<base href="/">`), add `serve` to its
 `app.js`, set to the app's web folder. The recording then opens it from a small local web server.
