@@ -90,8 +90,8 @@ module.exports = settings('protect', 8812, {
         await h.scrollBy(460); await h.wait(900);
       } },
 
-    { id: 'ask', title: 'Ask Stuart', label: 'Ask Stuart',
-      say: 'Stuck? Ask Stuart from inside the app.',
+    { id: 'ask', title: 'Ask us', label: 'Ask us',
+      say: 'Stuck? Ask us from inside the app.',
       run: async (p, h) => { await h.go('ask'); await h.wait(1200); await h.snap(); } },
 
     { id: 'improving', card: 'text', title: 'Always improving', short: false, kicker: 'Good to know',
