@@ -18,6 +18,8 @@ naming its repo. The tool downloads the latest copy of that repo before recordin
 | Do 30 Day Challenge Club (club.do30daychallenge.com) | `apps/challengeclub` | scparkins-png/app-clubs |
 | CRM SafeKeep, Monitor plan | `apps/crmsafekeep-monitor` | scparkins-png/crm-safekeep (private) |
 | CRM SafeKeep, Protect plan | `apps/crmsafekeep-protect` | scparkins-png/crm-safekeep (private) |
+| CRM SafeKeep help clip C00 "CRM SafeKeep in 3 minutes" | `apps/crmsafekeep-c00` | scparkins-png/crm-safekeep (private) |
+| CRM SafeKeep help clip C02 "Connect your Zoho read-only" | `apps/crmsafekeep-c02` | scparkins-png/crm-safekeep (private) |
 
 ## What it makes
 
@@ -79,7 +81,7 @@ to its `app.js`: a `setup` step, the `command` that starts it, its `url` and a `
 
 A scene can be a text card instead of a recording, for example to set out the problem before the app answers it:
 `card: 'text'` with a `heading`, a few short `lines` and an optional `kicker` (a small line above the heading).
-Add `short: false` to any scene to leave it out of the Short.
+Add `short: false` to any scene to leave it out of the Short. `demoLabel` in app.js changes the demo caption (help clips use "Example screen with demo data for an invented business"); leave out the `intro`/`outro` scenes for clips that start on the task.
 
 CRM SafeKeep's two walkthroughs share `apps/crmsafekeep-shared`: `demo-server.mjs` runs the real app code in Node with a
 fresh in-memory database, a pretend Zoho and eight weeks of made-up history for an invented business, so the live app,

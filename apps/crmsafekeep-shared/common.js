@@ -18,11 +18,12 @@ const say = (s) => s
   .replace(/£39/g, 'thirty-nine pounds');
 const line = (o) => ({ ...o, tts: say(o.say) });
 
-// A "Demo data" badge on every recorded screen.
-const BADGE = `addEventListener('DOMContentLoaded', () => {
+// A "Demo data" badge on every recorded screen (help clips pass their own wording as demoLabel).
+const badge = (label) => `addEventListener('DOMContentLoaded', () => {
   const b = document.createElement('div');
-  b.textContent = 'Demo data';
+  b.textContent = ${JSON.stringify(label)};
   b.style.cssText = 'position:fixed;right:10px;bottom:10px;z-index:2147483646;background:#fff7e0;color:#7a5a00;border:1.5px solid #f0d27a;border-radius:999px;padding:3px 10px;font:600 12px system-ui,sans-serif;pointer-events:none';
+  if (b.textContent.length > 20) { b.style.left = '10px'; b.style.textAlign = 'center'; b.style.borderRadius = '10px'; }
   document.body.appendChild(b);
 });`;
 
@@ -30,11 +31,13 @@ module.exports = function settings(plan, port, extra) {
   return {
     repo: 'scparkins-png/crm-safekeep',
     url: 'crmsafekeep.com',
-    icon: path.join(__dirname, 'icon-512.png'),
-    colours: { brand: '#1d4ed8', brandDark: '#0f172a', mint: '#e7edf7', sky: '#eef2f8', accent: '#2563eb' },
+    // CRM SafeKeep's own icon (brand 1.5.0; no SP icon since app 1.7.0).
+    icon: path.join(__dirname, 'csk-icon-512.png'),
+    // Brand 1.5.0: navy #14284B, blue #0B6FD6, tint #EAF2FC, page #F6F8FB.
+    colours: { brand: '#0B6FD6', brandDark: '#14284B', mint: '#EAF2FC', sky: '#F6F8FB', accent: '#0B6FD6' },
     voice: { name: 'bf_emma', speed: 1.0 },
     start: '__demo/signin',
-    initScript: BADGE,
+    initScript: badge(extra.demoLabel || 'Demo data'),
     site: {
       url: `http://localhost:${port}/`,
       ready: '__demo/health',

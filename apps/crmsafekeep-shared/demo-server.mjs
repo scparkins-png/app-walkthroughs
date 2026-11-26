@@ -43,6 +43,7 @@ function d1() {
 
 // --- The made-up CRM, week by week (w = 0 is seven weeks ago, w = 7 is this morning) ---------------
 let w = 0;
+let second = false; // the help clips' newly connected organisation
 const iso = (ms) => new RealDate(ms).toISOString();
 const workflows = () => [
   ['New enquiry welcome', 'Leads'], ['Quote follow-up', 'Deals'], ['Job booked confirmation', 'Deals'],
@@ -52,12 +53,12 @@ function zoho(key) {
   const now = Date.now();
   const GB = 1073741824;
   const map = {
-    '/crm/v8/org': { org: [{ id: '5550001000000000001', domain_name: 'org20099990001', zgid: '20099990001', company_name: 'Harbourside Joinery Ltd', license_details: { paid_type: 'professional', users_license_purchased: 10 } }] },
+    '/crm/v8/org': { org: [{ id: second ? '5550001000000000002' : '5550001000000000001', domain_name: second ? 'org20099990002' : 'org20099990001', zgid: second ? '20099990002' : '20099990001', company_name: 'Harbourside Joinery Ltd', license_details: { paid_type: 'professional', users_license_purchased: 10 } }] },
     '/crm/bulk/v8/backup': w >= 2 ? { backup: { id: '1', rrule: 'FREQ=WEEKLY;INTERVAL=1' } } : {},
     '/crm/bulk/v8/backup/urls': w >= 2 ? { urls: { data_links: ['https://download.example/Data_001.zip'], attachment_links: ['https://download.example/Attachments_001.zip'], expiry_date: iso(now + 5 * DAY) } } : {},
     '/crm/bulk/v8/backup/history': w >= 2 ? { history: [{ id: `h${w}`, log_time: iso(now - DAY), state: 'completed' }] } : { history: [] },
     '/crm/v8/users?type=AllUsers&per_page=200': { users: [
-      ...Array.from({ length: 8 }, (_, i) => ({ id: `u${i + 1}`, status: 'active', profile: { name: i < (w >= 3 ? 2 : 4) ? 'Administrator' : 'Standard' } })),
+      ...Array.from({ length: 8 }, (_, i) => ({ id: `u${i + 1}`, status: 'active', profile: { name: i < (second ? 4 : w >= 3 ? 2 : 4) ? 'Administrator' : 'Standard' } })),
       { id: 'u9', status: 'disabled', profile: { name: 'Standard' } }], info: { more_records: false } },
     '/crm/v8/settings/profiles': { profiles: [{ id: 'p1', name: 'Administrator', custom: false }, { id: 'p2', name: 'Standard', custom: false }, { id: 'p3', name: 'Workshop', custom: true }] },
     '/crm/v8/settings/roles': { roles: [{ id: 'r1', name: 'Director' }, { id: 'r2', name: 'Office' }, { id: 'r3', name: 'Workshop' }] },
@@ -94,23 +95,29 @@ globalThis.fetch = async (input, init = {}) => {
   }
   if (u.pathname === '/oauth/v2/token/revoke') return Response.json({});
   if (u.pathname === '/oauth/v2/token') {
+    // code "demo2" (help clips) is a second, brand-new organisation with no history.
     const body = new URLSearchParams(init.body);
+    const two = body.get('code') === 'demo2' || body.get('refresh_token') === 'demo-rt-2';
     return Response.json(body.get('grant_type') === 'authorization_code'
-      ? { access_token: 'demo-at', refresh_token: 'demo-rt', api_domain: 'https://www.zohoapis.eu' } : { access_token: 'demo-at' });
+      ? { access_token: two ? 'demo-at-2' : 'demo-at', refresh_token: two ? 'demo-rt-2' : 'demo-rt', api_domain: 'https://www.zohoapis.eu' } : { access_token: two ? 'demo-at-2' : 'demo-at' });
   }
   if (u.hostname === 'www.zohoapis.eu') {
     if (u.pathname === '/crm/v2/settings/api_dashboard/top_usage') return Response.json({ top_usage: [{ count: 310, value: 'Zoho Forms' }, { count: 140, value: 'Zoho Books' }] });
+    const auth = String((init.headers && (init.headers.Authorization || init.headers.authorization)) || '');
+    second = auth.includes('demo-at-2');
     const body = zoho(u.pathname + u.search);
     if (body === null) return new Response(null, { status: 204 });
     return body === undefined ? Response.json({ code: 'INVALID_URL_PATTERN' }, { status: 404 }) : Response.json(body);
   }
-  // Anything else (email, Gumroad) is switched off in the demo.
+  // Email goes nowhere: accepted and dropped, so sign-up screens behave as live.
+  if (u.hostname.includes('zeptomail')) return Response.json({ data: [{ code: 'EM_104', message: 'Email request received' }] }, { status: 201 });
+  // Anything else (Gumroad, Stripe) is switched off in the demo.
   return Response.json({ demo: true }, { status: 503 });
 };
 
 // --- Talk to the Worker directly --------------------------------------------------------------------
 const BASE = `http://localhost:${PORT}`;
-const env = { DB: d1(), ZOHO_CLIENT_ID: 'demo', ZOHO_CLIENT_SECRET: 'demo', ADMIN_KEY: 'demo-admin', TOKEN_KEY: 'demo-token-key', SKYVIA_TOKEN: 'demo-sky', APP_URL: BASE };
+const env = { DB: d1(), ZOHO_CLIENT_ID: 'demo', ZOHO_CLIENT_SECRET: 'demo', ADMIN_KEY: 'demo-admin', TOKEN_KEY: 'demo-token-key', SKYVIA_TOKEN: 'demo-sky', APP_URL: BASE, ZEPTO_TOKEN: 'demo-mail' };
 const ctx = { waitUntil: (p) => Promise.resolve(p).catch(() => {}), passThroughOnException() {} };
 const call = (p, { jar = '', method = 'GET', form } = {}) => worker.fetch(new Request(BASE + p, {
   method, redirect: 'manual',
@@ -189,6 +196,24 @@ http.createServer(async (req, res) => {
   try {
     const u = new URL(req.url, BASE);
     if (u.pathname === '/__demo/health') { res.writeHead(200); return res.end('ok'); }
+    // Help clips (C00, C02): sign in as an account by email (e.g. one just made on the sign-up form),
+    // and a pretend "Accept" on Zoho: runs the real connect and callback for the browser's own account,
+    // with the pretend Zoho behind it, then lands on the first results.
+    if (u.pathname === '/__demo/as') {
+      const acc = await env.DB.prepare('SELECT id FROM accounts WHERE email = ?').bind(String(u.searchParams.get('email') || '').toLowerCase()).first();
+      if (!acc) { res.writeHead(404); return res.end('no such demo account'); }
+      res.writeHead(303, { location: await linkFor(acc.id), 'set-cookie': 'sk_session=; Path=/; Max-Age=0' });
+      return res.end();
+    }
+    if (u.pathname === '/__demo/connect') {
+      const jar = String(req.headers.cookie || '').split(';').map((c) => c.trim()).find((c) => c.startsWith('sk_session=')) || '';
+      const loc = (await call('/connect', { jar })).headers.get('location') || '';
+      const st = loc.includes('state=') ? new URL(loc).searchParams.get('state') : null;
+      if (!st) { res.writeHead(303, { location: '/' }); return res.end(); }
+      const cb = await call(`/auth/callback?code=demo2&state=${st}&location=eu&accounts-server=${encodeURIComponent('https://accounts.zoho.eu')}`, { jar });
+      res.writeHead(303, { location: cb.headers.get('location') || '/' });
+      return res.end();
+    }
     if (u.pathname === '/__demo/signin' || u.pathname === '/__demo/new') {
       const link = await linkFor(u.pathname === '/__demo/new' ? ids.newId : ids.ownerId);
       res.writeHead(303, { location: link, 'set-cookie': 'sk_session=; Path=/; Max-Age=0' });

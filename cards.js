@@ -38,7 +38,8 @@ body{font-family:Inter,system-ui,sans-serif;color:${C.brandDark};
 ${body}</body></html>`;
 
 const bezel = g => `<div class="bezel" style="left:${g.x - g.bezel}px;top:${g.y - g.bezel}px;width:${g.phoneW + 2 * g.bezel}px;height:${g.phoneH + 2 * g.bezel}px;border-radius:${g.radius + g.bezel}px"></div>`;
-const demoPill = (size) => `<span class="pill" style="font-size:${size}px;padding:${size * .45}px ${size * .9}px"><i></i>Demo data</span>`;
+// app.demoLabel changes the wording (help clips: "Example screen with demo data for an invented business").
+const demoPill = (size) => `<span class="pill" style="font-size:${size}px;padding:${size * .45}px ${size * .9}px"><i></i>${esc(app.demoLabel || 'Demo data')}</span>`;
 
 function sceneWide(s, n, total) {
   const g = L.wide;
