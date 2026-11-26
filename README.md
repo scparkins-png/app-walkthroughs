@@ -20,6 +20,8 @@ naming its repo. The tool downloads the latest copy of that repo before recordin
 | CRM SafeKeep, Protect plan | `apps/crmsafekeep-protect` | scparkins-png/crm-safekeep (private) |
 | CRM SafeKeep help clip C00 "CRM SafeKeep in 3 minutes" | `apps/crmsafekeep-c00` | scparkins-png/crm-safekeep (private) |
 | CRM SafeKeep help clip C02 "Connect your Zoho read-only" | `apps/crmsafekeep-c02` | scparkins-png/crm-safekeep (private) |
+| AI SafeKeep help clip A00 "AI SafeKeep in 3 minutes" | `apps/aisafekeep-a00` | scparkins-png/ai-pack (private) |
+| AI SafeKeep help clip A03 "The free AI check" | `apps/aisafekeep-a03` | scparkins-png/ai-pack (private) |
 
 ## What it makes
 
@@ -86,6 +88,12 @@ Add `short: false` to any scene to leave it out of the Short. `demoLabel` in app
 CRM SafeKeep's two walkthroughs share `apps/crmsafekeep-shared`: `demo-server.mjs` runs the real app code in Node with a
 fresh in-memory database, a pretend Zoho and eight weeks of made-up history for an invented business, so the live app,
 Zoho and real clients are never touched. Its repo is private, so `run.sh` needs GitHub access to download it (or set `APP_CODE`).
+
+AI SafeKeep's help clips share `apps/aisafekeep-shared` in the same way: `demo-server.mjs` runs the real ai-pack code in Node
+with a fresh in-memory database and an invented business (Larkfield Bookkeeping Ltd). It has no secrets and refuses every
+outgoing request, so the live app, its database and real clients are never touched. Demo routes: `/__demo/new` (a brand-new
+owner), `/__demo/signin` (the ready-made business), `/__demo/finish` (answers the rest of the AI check) and `/__demo/plan?tier=`.
+The repo (ai-pack) is private too.
 
 If an app can't be opened as a plain file (for example it uses `<base href="/">`), add `serve` to its
 `app.js`, set to the app's web folder. The recording then opens it from a small local web server.
