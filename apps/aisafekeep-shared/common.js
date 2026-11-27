@@ -14,13 +14,14 @@
 const path = require('path');
 const CODE = process.env.APP_CODE || path.join(__dirname, '..', '..', 'apps-code', 'ai-pack');
 
-// Spellings for the AI voice only.
+// Spellings for the AI voice only. "AI" must be said as two letters, "A" then "I" (Stuart, 27 Nov 2026):
+// "A I" makes Kokoro read the A as the word "a" ("uh-eye"); "eigh eye" gives both letters, each stressed.
 const say = (s) => s
-  .replace(/aisafekeep\.com/g, 'A I safe keep dot com')
+  .replace(/aisafekeep\.com/g, 'eigh eye safe keep dot com')
   .replace(/SafeKeep/g, 'Safe Keep')
   .replace(/ChatGPT/g, 'Chat G P T')
   .replace(/\bMOTs\b/g, 'M O Ts').replace(/\bMOT\b/g, 'M O T')
-  .replace(/\bAI\b/g, 'A I');
+  .replace(/\bAI\b/g, 'eigh eye');
 const line = (o) => ({ ...o, tts: say(o.say) });
 
 // The demo caption on every recorded screen.
